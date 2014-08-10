@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<link rel="stylesheet" href="src/skins/simple/style.css" />
+	<link rel="stylesheet" href="src/type/markdown/style.css" />
+
+	<script src="vendor/jquery/jquery.js"></script>
+	<script src="vendor/ace/src/ace.js"></script>
+	<script src="src/editor/adapter.js"></script>
+	<script src="src/fongshen.js"></script>
+	<script src="src/type/markdown/buttons.js"></script>
+	<script>
+		jQuery(document).ready(function($)
+		{
+			var editor = $('#fongshen-editor');
+
+			var options = {
+				id: 'foo',
+				namespace: 'bar'
+			};
+
+			editor.Fongshen(new AceAdapter, FongshenOptions, options);
+
+//			var editor = ace.edit("fongshen-editor");
+//			editor.setTheme("ace/theme/monokai");
+//			editor.getSession().setMode("ace/mode/markdown");
+		});
+	</script>
+	<style>
+		#fongshen-editor
+		{
+			width: 750px;
+			height: 500px;
+		}
+	</style>
+</head>
+<body>
+	<div id="fongshen-editor"></div>
+</body>
+</html>
