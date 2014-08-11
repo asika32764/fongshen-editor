@@ -3,7 +3,7 @@
 Fongshen is a code inserting editor, It can integrate and wrap many other text editors and provides multiple buttons sets.
 Fongshen is based on well known [MarkItUp](http://markitup.jaysalvat.com/home/) editor but almost rewrite 80% codes.
 
-The name: "Fongshen" in Chinese means the god of wind.
+The name: "Fongshen" in Chinese means the [god of wind](http://en.wikipedia.org/wiki/Fei_Lian).
 
 ## Screen Shot
 
