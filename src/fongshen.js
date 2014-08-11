@@ -10,7 +10,7 @@
 	/**
 	 * This is Fongshen object.
 	 */
-	var self, Fongshen;
+	var self, Fongshen, Class;
 
 	/**
 	 * Constructor.
@@ -18,11 +18,10 @@
 	 * @param {Element} element   The editor container.
 	 * @param {Object}  adapter   The editor adapter, default is AceEditor.
 	 * @param {Object}  options   The option object.
-	 * @param {Object}  myOptions The custom option object.
 	 *
 	 * @constructor
 	 */
-	var Class = Fongshen = function(element, adapter, options, myOptions)
+	Fongshen = Class = function(element, adapter, options)
 	{
 		var defaultOptions = {
 			id: '',
@@ -30,19 +29,19 @@
 			onShiftEnter: '',
 			beforeInsert: null,
 			afterMultiInsert: null,
+			beforeMultiInsert: null,
 			afterInsert: null,
 			previewContainer: null,
 			previewHandler: null,
 			previewAjaxPath: null,
 			previewAjaxVar: 'data',
 			resize: true,
-			buttons: []
+			buttons: {}
 		};
 
 		options = options||{};
-		myOptions = myOptions||{};
 
-		this.options = $.extend(defaultOptions, options, myOptions);
+		this.options = $.extend(defaultOptions, options);
 		this.element = $(element);
 		this.editor = adapter || new AceAdapter;
 
@@ -247,12 +246,14 @@
 	var createMenus = function(buttonset, toolbar)
 	{
 		var ul = $('<ul></ul>'),
-			i = 0,
+			i = 1,
 			levels = [];
 
 		$('li:hover > ul', ul).css('display', 'block');
 
-		$(buttonset).each(function()
+		console.log(buttonset);
+
+		$.each(buttonset, function(name)
 		{
 			var button = this,
 				t = '',
@@ -270,8 +271,6 @@
 			}
 			else
 			{
-				i++;
-
 				for (j = levels.length -1; j >= 0; j--) {
 					t += levels[j]+"-";
 				}
@@ -298,6 +297,8 @@
 					levels.push(i);
 					$(li).addClass('fongshen-dropmenu').append(createMenus(button.dropMenus));
 				}
+
+				i++;
 			}
 		});
 
@@ -313,7 +314,7 @@
 	 */
 	var insert = function(button)
 	{
-		var selection = self.editor.getCopyText(),
+		var selection = self.editor.getSelection(),
 			string;
 
 		try
@@ -322,12 +323,33 @@
 			trigger(self.options.beforeInsert, button);
 			trigger(button.beforeInsert, button);
 
-			string = buildBlock(selection, button, selection);
-
-			if (string.block !== selection)
+			// callbacks after insertion
+			if (button.multiline === true)
 			{
-				doInsert(string);
+				trigger(button.beforeMultiInsert, button);
 			}
+
+			self.line = 1;
+
+			if (button.multiline === true && selection)
+			{
+				var lines = selection.split(/\r?\n/);
+
+				for (var l = 0; l < lines.length; l++)
+				{
+					self.line = l + 1;
+
+					lines[l] = buildBlock(lines[l], button).block;
+				}
+
+				selection = lines.join("\n");
+
+				button.openWith = null;
+			}
+
+			string = buildBlock(selection, button);
+
+			doInsert(string);
 
 			// callbacks after insertion
 			if (button.multiline === true)
@@ -378,10 +400,9 @@
 	 *
 	 * @param string
 	 * @param button
-	 * @param selection
 	 * @returns {{block: *, openBlockWith: , openWith: , replaceWith: , placeHolder: , closeWith: , closeBlockWith: }}
 	 */
-	var buildBlock = function(string, button, selection)
+	var buildBlock = function(string, button)
 	{
 		var openWith = trigger(button.openWith, button);
 		var placeHolder = trigger(button.placeHolder, button);
@@ -396,14 +417,12 @@
 		{
 			block = openWith + replaceWith + closeWith;
 		}
-		else if (selection === '' && placeHolder !== '')
+		else if (string === '' && placeHolder !== '')
 		{
 			block = openWith + placeHolder + closeWith;
 		}
 		else
 		{
-			string = string || selection;
-
 			var lines = [string], blocks = [];
 
 			if (multiline === true)
@@ -505,18 +524,17 @@
 	 *
 	 * @param {Object} adapter
 	 * @param {Object} options
-	 * @param {Object} myOptions
 	 *
 	 * @returns {*|$.fn}
 	 */
-	$.fn.fongshen = function(adapter, options, myOptions)
+	$.fn.fongshen = function(adapter, options)
 	{
 		var ele = [];
 
 		this.each(function()
 		{
 			var $this = $(this),
-				editor = new Class(this, adapter, options, myOptions);
+				editor = new Class(this, adapter, options);
 
 			ele.push(editor);
 

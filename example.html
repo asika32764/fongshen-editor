@@ -21,16 +21,16 @@
 			var options = {
 				id: 'foo',
 				namespace: 'bar',
-				previewAjaxPath: 'parser/markdown.php'
-				// previewContainer: $('#preview')
+				previewAjaxPath: 'parser/markdown.php',
+				buttons: FongshenMarkdownButtons
 			};
 
 			var aceOptions = {
-				theme: 'github',
+				// theme: 'github',
 				lang: 'markdown'
 			};
 
-			var Fongshen = editor.fongshen(new AceAdapter(aceOptions), FongshenOptions, options);
+			var Fongshen = editor.fongshen(new AceAdapter(aceOptions), options);
 
 			Fongshen.registerButton($('.h1'), {name:'Heading 1', key:"1", openWith:'# ', placeHolder:'Title'});
 		});
