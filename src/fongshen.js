@@ -247,21 +247,21 @@
 				.insertAfter(this.element)
 				.bind("mousedown.fongshen", function(e)
 				{
-					var h = this.element.height(),
+					var h = self.element.height(),
 						y = e.clientY, mouseMove, mouseUp;
 
 					mouseMove = function(e) {
-						this.element.css("height", Math.max(20, e.clientY+h-y)+"px");
+						self.element.css("height", Math.max(20, e.clientY+h-y)+"px");
 						return false;
 					};
 					mouseUp = function(e) {
 						$("html").unbind("mousemove.fongshen", mouseMove).unbind("mouseup.fongshen", mouseUp);
 
-						this.element.on('Fongshen.BeforeResize');
+						self.element.on('Fongshen.BeforeResize');
 
 						this.editor.resize();
 
-						this.element.on('Fongshen.AfterResize');
+						self.element.on('Fongshen.AfterResize');
 
 						return false;
 					};
