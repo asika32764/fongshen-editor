@@ -3,13 +3,14 @@
 <head>
 	<title>Test</title>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="../src/skins/simple/style.css" />
-	<link rel="stylesheet" href="../src/type/markdown/style.css" />
+	<link rel="stylesheet" href="src/skins/simple/style.css" />
+	<link rel="stylesheet" href="src/type/markdown/style.css" />
 
-	<script src="../vendor/jquery/jquery.js"></script>
-	<script src="../vendor/ace/src-min/ace.js"></script>
-	<script src="../src/editor/ace-adapter.js"></script>
-	<script src="../src/fongshen.js"></script>
+	<script src="vendor/jquery/jquery.js"></script>
+	<script src="vendor/marked/marked.min.js"></script>
+	<script src="vendor/ace/src-min/ace.js"></script>
+	<script src="src/editor/ace-adapter.js"></script>
+	<script src="src/fongshen.js"></script>
 	<script src="js/all/markdown.js"></script>
 	<script src="js/all/html.js"></script>
 	<script>
@@ -52,7 +53,15 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12 text-center">
-				<img src="../images/Fongshen-logo-500.png" alt="" style="width: 250px;"/>
+				<img src="images/Fongshen-logo-500.png" alt="" style="width: 250px;"/>
+
+				<div class="nav lead" style="margin-top: 20px;">
+					<a class="text-muted" href="index.html">Home</a>
+					<span class="text-muted">|</span>
+					<a class="text-muted" href="codemirror.html">CodeMirror example</a>
+					<span class="text-muted">|</span>
+					Support languages
+				</div>
 			</div>
 
 		</div>
@@ -160,5 +169,31 @@
 	</div>
 
 	<a href="https://github.com/asika32764/fongshen-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+	<hr />
+	<div class="row">
+		<div class="col-md-8 text-center col-md-offset-2">
+			<h2>About</h2>
+			<div class="lead">
+				<p>
+					Fongshen is a code inserting editor, It can integrate and wrap many other text editors. Fongshen is based on well known <a href="http://markitup.jaysalvat.com/home/" target="_blank">MarkItUp</a> editor but almost rewrite 80% codes.
+				</p>
+
+				<p>
+					The name: "Fongshen" in Chinese means <a href="http://en.wikipedia.org/wiki/Fei_Lian" target="_blank">the god of wind</a>.
+				</p>
+
+				<p>
+					This example page use <a href="https://github.com/chjj/marked" target="_blank">chjj/marked</a> to render Github flavored markdown.
+				</p>
+			</div>
+
+			<hr />
+
+			<p>
+				Fongshen Editor (c) 2014 by <a href="https://github.com/asika32764" target="_blank">Simon Asika</a>.
+			</p>
+		</div>
+	</div>
 </body>
 </html>

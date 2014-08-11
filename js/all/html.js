@@ -16,6 +16,7 @@ var FongshenHtml = function()
 		namespace: type,
 		previewAjaxPath: null,
 		previewContainer: '.' + type + '-wrap .preview-container',
+		autoPreviewDelay: 0,
 		previewHandler: function(string)
 		{
 			$(this.previewContainer).html(string);
