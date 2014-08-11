@@ -3,14 +3,14 @@
 <head>
 	<title>Test</title>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="src/skins/simple/style.css" />
-	<link rel="stylesheet" href="src/type/markdown/style.css" />
+	<link rel="stylesheet" href="../src/skins/simple/style.css" />
+	<link rel="stylesheet" href="../src/type/markdown/style.css" />
 
-	<script src="vendor/jquery/jquery.js"></script>
-	<script src="vendor/ace/src/ace.js"></script>
-	<script src="src/editor/adapter.js"></script>
-	<script src="src/fongshen.js"></script>
-	<script src="src/type/markdown/buttons.js"></script>
+	<script src="../vendor/jquery/jquery.js"></script>
+	<script src="../vendor/ace/src/ace.js"></script>
+	<script src="../src/editor/ace-adapter.js"></script>
+	<script src="../src/fongshen.js"></script>
+	<script src="../src/type/markdown/buttons.js"></script>
 	<script>
 		jQuery(document).ready(function($)
 		{
@@ -19,12 +19,13 @@
 			var options = {
 				id: 'foo',
 				namespace: 'bar',
-				previewAjaxPath: 'parser/markdown.php',
+				previewAjaxPath: '../parser/markdown.php',
 				previewContainer: '#preview-container',
 				buttons: FongshenMarkdownButtons
 			};
 
 			var aceOptions = {
+				theme: 'github',
 				lang: 'markdown'
 			};
 

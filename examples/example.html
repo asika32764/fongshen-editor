@@ -3,13 +3,13 @@
 <head>
 	<title>Test</title>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="src/skins/simple/style.css" />
-	<link rel="stylesheet" href="src/type/markdown/style.css" />
+	<link rel="stylesheet" href="../src/skins/simple/style.css" />
+	<link rel="stylesheet" href="../src/type/markdown/style.css" />
 
-	<script src="vendor/jquery/jquery.js"></script>
-	<script src="vendor/ace/src/ace.js"></script>
-	<script src="src/editor/adapter.js"></script>
-	<script src="src/fongshen.js"></script>
+	<script src="../vendor/jquery/jquery.js"></script>
+	<script src="../vendor/ace/src/ace.js"></script>
+	<script src="../src/editor/ace-adapter.js"></script>
+	<script src="../src/fongshen.js"></script>
 	<script>
 		jQuery(document).ready(function($)
 		{
@@ -20,7 +20,7 @@
 			var options = {
 				id: 'foo',
 				namespace: 'bar',
-				previewAjaxPath: 'parser/markdown.php',
+				previewAjaxPath: '../parser/markdown.php',
 				previewContainer: '#preview-container'
 				// buttons: FongshenMarkdownButtons
 			};
@@ -169,10 +169,33 @@
 		});
 	</script>
 	<style>
+		.preview-wrap
+		{
+			min-height: 500px;
+			border-right: 1px solid #eee;
+			border-left: 1px solid #eee;
+			margin: 5px 0 5px 0;
+			padding: 0 20px;
+		}
 	</style>
 </head>
 <body>
 	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<img src="../images/Fongshen-logo-500.png" alt="" style="width: 250px;"/>
+				<div align="center" style="margin-top: 30px;">
+
+					<iframe src="http://ghbtns.com/github-btn.html?user=asika32764&repo=fongshen-editor&type=fork"
+							allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+
+					<iframe src="http://ghbtns.com/github-btn.html?user=asika32764&repo=fongshen-editor&type=watch"
+							allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+				</div>
+			</div>
+
+		</div>
+		<hr />
 		<div class="row">
 			<div class="editor-wrap col-md-12">
 				<!-- Toolbar -->
@@ -214,14 +237,13 @@
 				<div class="row editor-inner">
 					<div class="col-md-6">
 						<fieldset>
-
 							<!-- Editor -->
 							<div id="fongshen-editor" class="" style="height: 500px;"></div>
+							<p align="center">Pull to resize</p>
 						</fieldset>
 					</div>
 					<div class="col-md-6">
-						<fieldset>
-							<legend>Preview</legend>
+						<fieldset class="preview-wrap">
 							<div id="preview-container"></div>
 						</fieldset>
 					</div>
@@ -229,5 +251,7 @@
 			</div>
 		</div>
 	</div>
+
+	<a href="https://github.com/asika32764/fongshen-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 </body>
 </html>
