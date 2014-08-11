@@ -18,9 +18,9 @@
 	 */
 	var Class = window.CodemirrorAdapter = function(options)
 	{
-		if (options.constructor.name == "Editor")
+		if (options instanceof CodeMirror)
 		{
-			// this.cm = options;
+			this.cm = options;
 		}
 
 		var defaultOptions = {
@@ -40,7 +40,7 @@
 	{
 		this.element = element;
 
-		this.cm = CodeMirror.fromTextArea(element.get(0), this.options);
+		this.cm = this.cm || CodeMirror.fromTextArea(element.get(0), this.options);
 	};
 
 	/**

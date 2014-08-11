@@ -89,4 +89,19 @@ var cmOptions = {
 var Fongshen = editor.fongshen(new CodemirrorAdapter(cmOptions), options);
 ```
 
+### Dependency Injection
+
+You can create your own editor object and inject it into adapter.
+
+``` javascript
+var ace = ace.edit('#my-editor');
+var session = ace.getSession();
+
+ace.setTheme("ace/theme/monokai");
+session.setMode("ace/mode/markdown");
+session.setUseWrapMode(true);
+
+var Fongshen = editor.fongshen(new AceAdapter(ace), options);
+```
+
 Other tutorial please see [Examples](examples).
