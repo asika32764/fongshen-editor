@@ -10,7 +10,7 @@
 	/**
 	 * This is Fongshen object.
 	 */
-	var self, Fongshen, Class;
+	var Fongshen, Class;
 
 	/**
 	 * Constructor.
@@ -61,11 +61,11 @@
 	{
 		var options = this.options;
 
-		wrap(options.id, options.namespace);
+		this.wrap(options.id, options.namespace);
 
 		this.editor.initialise(element);
 
-		registerEvents();
+		this.registerEvents();
 	};
 
 	/**
@@ -108,6 +108,8 @@
 	 */
 	Class.prototype.registerButton = function(ele, button)
 	{
+		var self = this;
+
 		if (typeof ele == 'string')
 		{
 			ele = $(ele);
@@ -128,7 +130,7 @@
 
 			setTimeout(function()
 			{
-				insert(button)
+				self.insert(button)
 			}, 1);
 
 			return false;
@@ -140,11 +142,11 @@
 	 */
 	Class.prototype.refreshPreview = function()
 	{
-		self.element.trigger('Fongshen.BeforePreview', this.editor.getValue(), self);
+		this.element.trigger('Fongshen.BeforePreview', this.editor.getValue(), self);
 
-		renderPreview();
+		this.renderPreview();
 
-		self.element.trigger('Fongshen.AfterPreview', this.editor.getValue(), self);
+		this.element.trigger('Fongshen.AfterPreview', this.editor.getValue(), self);
 	};
 
 	/**
@@ -165,8 +167,10 @@
 	/**
 	 * Register events.
 	 */
-	var registerEvents = function()
+	Class.prototype.registerEvents = function()
 	{
+		var self = this;
+
 		// Auto preview
 		if (self.options.autoPreview)
 		{
@@ -182,7 +186,7 @@
 				}
 			},1000);
 
-			self.editor.bind('keyup.fongshen', function()
+			this.editor.bind('keyup.fongshen', function()
 			{
 				self.refreshBlock = self.options.autoPreviewDelay;
 
@@ -197,7 +201,7 @@
 		}
 
 		// remember the last focus
-		self.element.bind('focus.fongshen', function()
+		this.element.bind('focus.fongshen', function()
 		{
 			$.fongshen.focused = this;
 		});
@@ -214,48 +218,50 @@
 	 * @param {String} id Id.
 	 * @param {String} ns Namespace.
 	 */
-	var wrap = function(id, ns)
+	Class.prototype.wrap = function(id, ns)
 	{
+		var self = this;
+
 		var toolbar,
 			footer;
 
 		id = 'id="' + id + '"';
 
-		self.element.wrap('<div ' + id + ' class="fongshen fongshen-container ' + ns + '"></div>');
+		this.element.wrap('<div ' + id + ' class="fongshen fongshen-container ' + ns + '"></div>');
 
 		// Toolbar
-		self.toolbar = toolbar = $('<div class="fongshen-toolbar"></div>').insertBefore(self.element);
+		self.toolbar = toolbar = $('<div class="fongshen-toolbar"></div>').insertBefore(this.element);
 
 		if (self.options.buttons)
 		{
-			$(createMenus(self.options.buttons, toolbar)).appendTo(toolbar);
+			$(this.createMenus(self.options.buttons, toolbar)).appendTo(toolbar);
 		}
 
 		// Footer
-		self.footer = footer = $('<div class="fongshen-footer"></div>').insertAfter(self.element);
+		self.footer = footer = $('<div class="fongshen-footer"></div>').insertAfter(this.element);
 
 		// add the resize handle after Editor
 		if (self.options.resize === true)
 		{
 			var resizeHandle = $('<div class="fongshen-resize-handler"></div>')
-				.insertAfter(self.element)
+				.insertAfter(this.element)
 				.bind("mousedown.fongshen", function(e)
 				{
-					var h = self.element.height(),
+					var h = this.element.height(),
 						y = e.clientY, mouseMove, mouseUp;
 
 					mouseMove = function(e) {
-						self.element.css("height", Math.max(20, e.clientY+h-y)+"px");
+						this.element.css("height", Math.max(20, e.clientY+h-y)+"px");
 						return false;
 					};
 					mouseUp = function(e) {
 						$("html").unbind("mousemove.fongshen", mouseMove).unbind("mouseup.fongshen", mouseUp);
 
-						self.element.on('Fongshen.BeforeResize');
+						this.element.on('Fongshen.BeforeResize');
 
-						self.editor.resize();
+						this.editor.resize();
 
-						self.element.on('Fongshen.AfterResize');
+						this.element.on('Fongshen.AfterResize');
 
 						return false;
 					};
@@ -274,8 +280,10 @@
 	 *
 	 * @returns {HTMLElement}
 	 */
-	var createMenus = function(buttonset, toolbar)
+	Class.prototype.createMenus = function(buttonset, toolbar)
 	{
+		var self = this;
+
 		var ul = $('<ul></ul>'),
 			i = 1,
 			levels = [];
@@ -341,21 +349,26 @@
 	 *
 	 * @param {Object} button Button profile.
 	 */
-	var insert = function(button)
+	Class.prototype.insert = function(button)
 	{
-		var selection = self.editor.getSelection(),
+		var self = this;
+
+		var selection = this.editor.getSelection(),
 			string;
 
 		try
 		{
 			// callbacks before insertion
-			trigger(self.options.beforeInsert, button);
-			trigger(button.beforeInsert, button);
+			this.trigger(self.options.beforeInsert, button);
+			this.trigger(button.beforeInsert, button);
+
+			var openBlockWith = this.trigger(button.openBlockWith, button);
+			var closeBlockWith = this.trigger(button.closeBlockWith, button);
 
 			// callbacks after insertion
 			if (button.multiline === true)
 			{
-				trigger(button.beforeMultiInsert, button);
+				this.trigger(button.beforeMultiInsert, button);
 			}
 
 			self.line = 1;
@@ -368,26 +381,31 @@
 				{
 					self.line = l + 1;
 
-					lines[l] = buildBlock(lines[l], button).block;
+					lines[l] = this.buildBlock(lines[l], button).block;
 				}
 
 				selection = lines.join("\n");
 
 				button.openWith = null;
+				button.closeWith = null;
 			}
 
-			string = buildBlock(selection, button);
+			string = this.buildBlock(selection, button);
 
-			doInsert(string);
+			string.block = openBlockWith + string.block + closeBlockWith;
+			string.openBlockWith = openBlockWith;
+			string.closeBlockWith = closeBlockWith;
+
+			this.doInsert(string);
 
 			// callbacks after insertion
 			if (button.multiline === true)
 			{
-				trigger(button.afterMultiInsert, button);
+				this.trigger(button.afterMultiInsert, button);
 			}
 
-			trigger(button.afterInsert, button);
-			trigger(self.options.afterInsert, button);
+			this.trigger(button.afterInsert, button);
+			this.trigger(self.options.afterInsert, button);
 		}
 		catch (err)
 		{
@@ -406,21 +424,23 @@
 	 *
 	 * @param string
 	 */
-	var doInsert = function(string)
+	Class.prototype.doInsert = function(string)
 	{
-		var selection = self.editor.getSelection();
+		var self = this;
+
+		var selection = this.editor.getSelection();
 
 		if (selection)
 		{
-			self.editor.insert(string.block);
+			this.editor.insert(string.block);
 		}
 		else
 		{
-			self.editor.insert(string.block);
+			this.editor.insert(string.block);
 
 			var backOffset = string.closeWith.length;
 
-			self.editor.moveCursor(0, -backOffset);
+			this.editor.moveCursor(0, -backOffset);
 		}
 	};
 
@@ -431,14 +451,14 @@
 	 * @param button
 	 * @returns {{block: *, openBlockWith: , openWith: , replaceWith: , placeHolder: , closeWith: , closeBlockWith: }}
 	 */
-	var buildBlock = function(string, button)
+	Class.prototype.buildBlock = function(string, button)
 	{
-		var openWith = trigger(button.openWith, button);
-		var placeHolder = trigger(button.placeHolder, button);
-		var replaceWith = trigger(button.replaceWith, button);
-		var closeWith = trigger(button.closeWith, button);
-		var openBlockWith = trigger(button.openBlockWith, button);
-		var closeBlockWith = trigger(button.closeBlockWith, button);
+		var self = this;
+
+		var openWith = this.trigger(button.openWith, button);
+		var placeHolder = this.trigger(button.placeHolder, button);
+		var replaceWith = this.trigger(button.replaceWith, button);
+		var closeWith = this.trigger(button.closeWith, button);
 		var multiline = button.multiline;
 		var block;
 
@@ -477,16 +497,12 @@
 			block = blocks.join("\n");
 		}
 
-		block = openBlockWith + block + closeBlockWith;
-
 		return {
 			block: block,
-			openBlockWith: openBlockWith,
 			openWith: openWith,
 			replaceWith: replaceWith,
 			placeHolder: placeHolder,
-			closeWith: closeWith,
-			closeBlockWith: closeBlockWith
+			closeWith: closeWith
 		};
 	};
 
@@ -498,11 +514,11 @@
 	 *
 	 * @returns {*}
 	 */
-	var trigger = function(action, button)
+	Class.prototype.trigger = function(action, button)
 	{
 		if ($.isFunction(action))
 		{
-			action = action(self);
+			action = action(this);
 		}
 		
 		if (action === null || action === undefined)
@@ -516,8 +532,10 @@
 	/**
 	 * Render preview.
 	 */
-	var renderPreview = function()
+	Class.prototype.renderPreview = function()
 	{
+		var self = this;
+
 		if (!self.options.previewContainer)
 		{
 			return;
@@ -530,7 +548,7 @@
 
 		if (self.options.previewHandler && typeof self.options.previewHandler === 'function')
 		{
-			self.options.previewHandler(self.editor.getValue(), self);
+			self.options.previewHandler(this.editor.getValue(), self);
 		}
 		else if (self.options.previewAjaxPath)
 		{
@@ -539,7 +557,7 @@
 				dataType: 'text',
 				global: false,
 				url: self.options.previewAjaxPath,
-				data: self.options.previewAjaxVar + '=' + encodeURIComponent(self.editor.getValue()),
+				data: self.options.previewAjaxVar + '=' + encodeURIComponent(this.editor.getValue()),
 				success: function(data)
 				{
 					$(self.options.previewContainer).html(data);

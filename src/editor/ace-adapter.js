@@ -44,7 +44,10 @@
 
 		this.ace.setTheme("ace/theme/" + this.options.theme);
 
-		this.ace.getSession().setMode("ace/mode/" + this.options.lang);
+		this.session = this.ace.getSession();
+
+		this.session.setMode("ace/mode/" + this.options.lang);
+		this.session.setUseWrapMode(this.options.wrap);
 
 		this.textarea = this.element.find('.ace_text-input');
 	};

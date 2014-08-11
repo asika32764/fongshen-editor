@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="../src/skins/simple/style.css" />
 	<link rel="stylesheet" href="../src/type/markdown/style.css" />
 	<link rel="stylesheet" href="../vendor/codemirror/lib/codemirror.css" />
-	<link rel="stylesheet" href="../vendor/codemirror/theme/monokai.css" />
+	<link rel="stylesheet" href="../vendor/codemirror/theme/elegant.css" />
 
 	<script src="../vendor/jquery/jquery.js"></script>
 	<script src="../vendor/codemirror/lib/codemirror.js"></script>
@@ -29,6 +29,7 @@
 
 			var cmOptions = {
 				mode: 'markdown',
+				theme: 'elegant',
 				lineNumbers: true
 			};
 
@@ -179,11 +180,24 @@
 
 		.preview-wrap
 		{
-			min-height: 500px;
+			min-height: 400px;
 			border-right: 1px solid #eee;
 			border-left: 1px solid #eee;
 			margin: 5px 0 5px 0;
 			padding: 0 20px;
+		}
+
+		.CodeMirror
+		{
+			border-radius: 5px;
+			border: 1px solid #ddd;
+		}
+
+		.preview-wrap
+		{
+			border: 1px solid #ddd;
+			background: #eee;
+			border-radius: 6px;
 		}
 	</style>
 </head>
@@ -192,14 +206,10 @@
 		<div class="row">
 			<div class="col-md-12 text-center">
 				<img src="../images/Fongshen-logo-500.png" alt="" style="width: 250px;"/>
-				<div align="center" style="margin-top: 30px;">
 
-					<iframe src="http://ghbtns.com/github-btn.html?user=asika32764&repo=fongshen-editor&type=fork"
-							allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+				<hr />
 
-					<iframe src="http://ghbtns.com/github-btn.html?user=asika32764&repo=fongshen-editor&type=watch"
-							allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
-				</div>
+				<h1>CodeMirror example</h1>
 			</div>
 
 		</div>
@@ -250,9 +260,9 @@
 						</fieldset>
 					</div>
 					<div class="col-md-6">
-						<fieldset class="preview-wrap">
+						<div class="preview-wrap">
 							<div id="preview-container"></div>
-						</fieldset>
+						</div>
 					</div>
 				</div>
 			</div>
