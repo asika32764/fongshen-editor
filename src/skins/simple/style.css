@@ -26,17 +26,17 @@
 	line-height:18px;
 	overflow:auto;
 }
-.markItUpPreviewFrame	{
+.fongshen-preview	{
 	overflow:auto;
 	background-color:#FFF;
 	width:99.9%;
 	height:300px;
 	margin:5px 0;
 }
-.markItUpFooter {
+.fongshen-footer {
 	width:100%;
 }
-.markItUpResizeHandle {
+.fongshen-resize-handler {
 	overflow:hidden;
 	width:22px; height:5px;
 	margin-left:auto;
@@ -46,6 +46,13 @@
 }
 /***************************************************************************************/
 /* first row of buttons */
+.fongshen-toolbar::after {
+	display: block;
+	height: 1px;
+	content: "";
+	clear: both;
+}
+
 .fongshen-toolbar ul li	{
 	list-style:none;
 	float:left;

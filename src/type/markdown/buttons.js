@@ -34,7 +34,7 @@ var FongshenMarkdownOptions = FongshenOptions = {
 			{name:'Code Inline', openWith:'`', closeWith:'`', multiline: true, className: "code-inline"}
 		]},
 		{separator:'---------------'},
-		{name:'Preview', call:'preview', className:"preview"}
+		{name:'Preview', call:'createPreview', className:"preview"}
 	]
 };
 

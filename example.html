@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Test</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="src/skins/simple/style.css" />
 	<link rel="stylesheet" href="src/type/markdown/style.css" />
 
@@ -15,27 +16,41 @@
 		{
 			var editor = $('#fongshen-editor');
 
+			editor.on('afterPreview.fongshen', function(){console.log('123213123')});
+
 			var options = {
 				id: 'foo',
-				namespace: 'bar'
+				namespace: 'bar',
+				previewAjaxPath: 'parser/markdown.php'
+				// previewContainer: $('#preview')
 			};
 
-			editor.Fongshen(new AceAdapter, FongshenOptions, options);
+			var aceOptions = {
+				theme: 'github',
+				lang: 'markdown'
+			};
 
-//			var editor = ace.edit("fongshen-editor");
-//			editor.setTheme("ace/theme/monokai");
-//			editor.getSession().setMode("ace/mode/markdown");
+			var Fongshen = editor.fongshen(new AceAdapter(aceOptions), FongshenOptions, options);
+
+			Fongshen.registerButton($('.h1'), {name:'Heading 1', key:"1", openWith:'# ', placeHolder:'Title'});
 		});
 	</script>
 	<style>
-		#fongshen-editor
+		.editor-wrap
 		{
 			width: 750px;
+		}
+
+		#fongshen-editor
+		{
 			height: 500px;
 		}
 	</style>
 </head>
 <body>
-	<div id="fongshen-editor"></div>
+<button type="button" class="h1 btn btn-primary">H1</button>
+	<div class="editor-wrap row">
+		<div id="fongshen-editor" class="col-md-12"></div>
+	</div>
 </body>
 </html>

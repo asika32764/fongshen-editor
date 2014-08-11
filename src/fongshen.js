@@ -7,21 +7,20 @@
 
 ;(function($)
 {
-	var ClassName = 'Fongshen';
+	var self;
 
-	var self,
-		element,
-		toolbar,
-		footer,
-		abort;
-
-	var Class = window[ClassName] = function(element, adapter, options, myOptions)
+	var Class = window.Fongshen = function(element, adapter, options, myOptions)
 	{
 		var defaultOptions = {
 			id: '',
 			namespace: (Math.random() + '').replace('0.', 'ns-'),
 			onShiftEnter: '',
-			buttons: [{}]
+			previewContainer: null,
+			previewHandler: null,
+			previewAjaxPath: null,
+			previewAjaxVar: 'data',
+			resize: true,
+			buttons: []
 		};
 
 		options = options||{};
@@ -44,19 +43,14 @@
 
 		wrap(options.id, options.namespace);
 
-		registerEvents();
-
 		this.editor.initialise(element);
+
+		registerEvents();
 	};
 
 	Class.prototype.getEditor = function()
 	{
 		return this.editor;
-	};
-
-	Class.prototype.preview = function()
-	{
-		// TODO: Implement preview.
 	};
 
 	Class.prototype.ask = function(question, defaultVar)
@@ -73,39 +67,75 @@
 		return value;
 	};
 
+	Class.prototype.registerButton = function(ele, button)
+	{
+		if (typeof ele == 'string')
+		{
+			ele = $(ele);
+		}
+
+		ele.bind('click.fongshen', function(e)
+		{
+			e.preventDefault();
+		}).bind("focusin.fongshen", function()
+		{
+			self.editor.focus();
+		}).bind('mouseup', function()
+		{
+			if (button.call)
+			{
+				self[button.call]();
+			}
+
+			setTimeout(function()
+			{
+				insert(button)
+			}, 1);
+
+			return false;
+		});
+	};
+
+	Class.prototype.refreshPreview = function()
+	{
+		self.element.trigger('Fongshen.BeforePreview', this.editor.getValue(), self);
+
+		renderPreview();
+
+		self.element.trigger('Fongshen.AfterPreview', this.editor.getValue(), self);
+	};
+
+	Class.prototype.createPreview = function()
+	{
+		if (!self.options.previewContainer)
+		{
+			var container = $('<div class="fongshen-preview"></div>');
+
+			container.insertAfter(self.footer);
+
+			self.options.previewContainer = container;
+		}
+	};
+
 	var registerEvents = function()
 	{
-		// listen key events
-		// element.bind('keydown.fongshen', keyPressed).bind('keyup', keyPressed);
-
-		// bind an event to catch external calls
-		self.element.bind("insertion.fongshen", function(e, settings)
-		{
-			if (settings.target !== false)
-			{
-				get();
-			}
-
-			if (textarea === $.fongshen.focused)
-			{
-				insert(settings);
-			}
-		});
-
 		// remember the last focus
 		self.element.bind('focus.fongshen', function()
 		{
 			$.fongshen.focused = this;
 		});
 
-		if (self.options.previewInElement)
+		if (self.options.previewContainer)
 		{
-			refreshPreview();
+			self.refreshPreview();
 		}
 	};
 
 	var wrap = function(id, ns)
 	{
+		var toolbar,
+			footer;
+
 		id = 'id="' + id + '"';
 
 		self.element.wrap('<div ' + id + ' class="fongshen fongshen-container ' + ns + '"></div>');
@@ -113,35 +143,39 @@
 		// Toolbar
 		self.toolbar = toolbar = $('<div class="fongshen-toolbar"></div>').insertBefore(self.element);
 
-		$(createMenus(self.options.buttons, toolbar)).appendTo(toolbar);
+		if (self.options.buttons)
+		{
+			$(createMenus(self.options.buttons, toolbar)).appendTo(toolbar);
+		}
 
 		// Footer
-		this.footer = footer = $('<div class="fongshen-footer"></div>').insertAfter(self.element);
+		self.footer = footer = $('<div class="fongshen-footer"></div>').insertAfter(self.element);
 
-		// add the resize handle after textarea
-		if (self.options.resize === true && self.browser.safari !== true) {
+		// add the resize handle after Editor
+		if (self.options.resize === true)
+		{
 			var resizeHandle = $('<div class="fongshen-resize-handler"></div>')
 				.insertAfter(self.element)
 				.bind("mousedown.fongshen", function(e)
 				{
-					var h = element.height(),
+					var h = self.element.height(),
 						y = e.clientY, mouseMove, mouseUp;
 
 					mouseMove = function(e) {
-						element.css("height", Math.max(20, e.clientY+h-y)+"px");
+						self.element.css("height", Math.max(20, e.clientY+h-y)+"px");
 						return false;
 					};
 					mouseUp = function(e) {
 						$("html").unbind("mousemove.fongshen", mouseMove).unbind("mouseup.fongshen", mouseUp);
 
-						this.editor.resize();
+						self.editor.resize();
 
 						return false;
 					};
 					$("html").bind("mousemove.fongshen", mouseMove).bind("mouseup.fongshen", mouseUp);
 				});
 
-			footer.append(resizeHandle);
+			self.footer.append(resizeHandle);
 		}
 	};
 
@@ -166,7 +200,7 @@
 
 			if (button.separator)
 			{
-				li = $('<li class="fongshen-separator">'+(button.separator||'')+'</li>').appendTo(ul);
+				li = $('<li class="fongshen-separator">' + (button.separator || '') + '</li>').appendTo(ul);
 			}
 			else
 			{
@@ -177,40 +211,21 @@
 				}
 
 				li = $('<li class="fongshen-button fongshen-button-'+t+(i)+' '+(button.className||'')+'"><a href="" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
-					.bind("contextmenu.fongshen", function()
-					{ // prevent contextmenu on mac and allow ctrl+click
-						return false;
-					}).bind('click.fongshen', function(e)
-					{
-						e.preventDefault();
-					}).bind("focusin.fongshen", function()
-					{
-						self.element.focus();
-					}).bind('mouseup', function()
-					{
-						if (button.call)
-						{
-							self[button.call]();
-						}
-
-						setTimeout(function()
-						{
-							insert(button)
-						}, 1);
-
-						return false;
-					}).bind('mouseenter.fongshen', function()
+					.bind('mouseenter.fongshen', function()
 					{
 						$('> ul', this).show();
 
-						$(document).one('click', function() { // close dropmenu if click outside
-								$('ul ul', toolbar).hide();
-							}
-						);
+						$(document).one('click', function()
+						{
+							// close dropmenu if click outside
+							$('ul ul', toolbar).hide();
+						});
 					}).bind('mouseleave.fongshen', function()
 					{
 						$('> ul', this).hide();
 					}).appendTo(ul);
+
+				self.registerButton(li, button);
 
 				if (button.dropMenus)
 				{
@@ -258,10 +273,10 @@
 		}
 
 		// refresh preview if opened
-//		if (previewWindow && options.previewAutoRefresh)
-//		{
-//			refreshPreview();
-//		}
+		if (self.options.previewContainer)
+		{
+			self.refreshPreview();
+		}
 	};
 
 	var doInsert = function(string)
@@ -356,14 +371,57 @@
 		return action;
 	};
 
-	$.fn[ClassName] = function(adapter, options, myOptions)
+	var renderPreview = function()
 	{
-		var el = [];
+		if (!self.options.previewContainer)
+		{
+			return;
+		}
 
-		this.each(function() {
-			el.push(new window[ClassName](this, adapter, options, myOptions));
+		if (typeof self.options.previewContainer == 'string')
+		{
+			self.options.previewContainer = $(self.options.previewContainer);
+		}
+
+		if (self.options.previewHandler && typeof self.options.previewHandler === 'function')
+		{
+			self.options.previewHandler(self.editor.getValue(), self);
+		}
+		else if (self.options.previewAjaxPath)
+		{
+			$.ajax({
+				type: 'POST',
+				dataType: 'text',
+				global: false,
+				url: self.options.previewAjaxPath,
+				data: self.options.previewAjaxVar + '=' + encodeURIComponent(self.editor.getValue()),
+				success: function(data)
+				{
+					$(self.options.previewContainer).html(data);
+				}
+			});
+		}
+	};
+
+	$.fn.fongshen = function(adapter, options, myOptions)
+	{
+		var ele = [];
+
+		this.each(function()
+		{
+			var $this = $(this),
+				editor = new window.Fongshen(this, adapter, options, myOptions);
+
+			ele.push(editor);
+
+			$this.data('Fongshen', editor);
 		});
 
-		return el[0] || this;
+		return ele[0] || $this;
+	};
+
+	$.fn.getFongshen = function()
+	{
+		return $(this).data('Fongshen');
 	};
 })(jQuery);

@@ -9,9 +9,14 @@
 {
 	"use strict";
 
-	var Class = window.AceAdapter = function()
+	var Class = window.AceAdapter = function(options)
 	{
+		var defaultOptions = {
+			theme: 'monokai',
+			lang: 'markdown'
+		};
 
+		this.options = $.extend(defaultOptions, options);
 	};
 
 	Class.prototype.initialise = function(element)
@@ -20,9 +25,9 @@
 
 		this.ace = ace.edit(element.attr('id'));
 
-		this.ace.setTheme("ace/theme/monokai");
+		this.ace.setTheme("ace/theme/" + this.options.theme);
 
-		this.ace.getSession().setMode("ace/mode/markdown");
+		this.ace.getSession().setMode("ace/mode/". this.options.lang);
 
 		this.textarea = this.element.find('.ace_text-input');
 	};
@@ -31,7 +36,7 @@
 	{
 		this.ace.insert(string);
 
-		this.textarea.focus();
+		this.focus();
 	};
 
 	Class.prototype.getSelection = function()
@@ -44,6 +49,11 @@
 		}
 
 		return selection;
+	};
+
+	Class.prototype.getValue = function()
+	{
+		return this.ace.getValue();
 	};
 
 	Class.prototype.getRange = function()
@@ -61,6 +71,16 @@
 		this.ace.getSelection().moveCursorBy(line, offset);
 
 		return this;
+	};
+
+	Class.prototype.focus = function()
+	{
+		this.textarea.focus();
+	};
+
+	Class.prototype.resize = function()
+	{
+		this.ace.resize();
 	};
 
 })(jQuery);

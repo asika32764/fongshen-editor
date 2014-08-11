@@ -1,0 +1,9 @@
+{
+	"require":
+	{
+		"michelf/php-markdown": "1.4.*"
+	},
+	"config":{
+		"vendor-dir" : "php"
+	}
+}
