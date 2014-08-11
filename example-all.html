@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../src/skins/simple/style.css" />
+	<link rel="stylesheet" href="../src/type/markdown/style.css" />
+
+	<script src="../vendor/jquery/jquery.js"></script>
+	<script src="../vendor/ace/src-min/ace.js"></script>
+	<script src="../src/editor/ace-adapter.js"></script>
+	<script src="../src/fongshen.js"></script>
+	<script src="js/all/markdown.js"></script>
+	<script src="js/all/html.js"></script>
+	<script>
+		jQuery(document).ready(function($)
+		{
+			var markdown = FongshenMarkdown();
+
+			var html = FongshenHtml();
+		});
+	</script>
+	<style>
+		body
+		{
+			background-color: #f4f4f4;
+		}
+
+		.preview-wrap
+		{
+			min-height: 500px;
+			border-right: 1px solid #eee;
+			border-left: 1px solid #eee;
+			margin: 5px 0 5px 0;
+			padding: 0 20px;
+		}
+
+		.fongshen-editor
+		{
+			border-radius: 5px;
+		}
+
+		.preview-wrap
+		{
+			border: 1px solid #ddd;
+			background: #eee;
+			border-radius: 6px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<img src="../images/Fongshen-logo-500.png" alt="" style="width: 250px;"/>
+			</div>
+
+		</div>
+		<hr />
+
+		<h2 style="text-align: center">Markdown</h2>
+		<div class="row markdown-wrap">
+			<div class="editor-wrap col-md-12">
+				<!-- Toolbar -->
+				<div class="toolbar">
+					<div class="btn-group">
+						<button id="button-h1" class="btn btn-default btn-sm">H1</button>
+						<button id="button-h2" class="btn btn-default btn-sm">H2</button>
+						<button id="button-h3" class="btn btn-default btn-sm">H3</button>
+						<button id="button-h4" class="btn btn-default btn-sm">H4</button>
+						<button id="button-h5" class="btn btn-default btn-sm">H5</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="button-strong" class="btn btn-default btn-sm">B</button>
+						<button id="button-italic" class="btn btn-default btn-sm"><em>I</em></button>
+					</div>
+
+					<div class="btn-group">
+						<button id="button-ul" class="btn btn-default btn-sm">ul</button>
+						<button id="button-ol" class="btn btn-default btn-sm">ol</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="button-img" class="btn btn-default btn-sm">Img</button>
+						<button id="button-link" class="btn btn-default btn-sm">Link</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="button-quote" class="btn btn-default btn-sm">Quote</button>
+						<button id="button-codeblock" class="btn btn-default btn-sm">Code Block</button>
+						<button id="button-code" class="btn btn-default btn-sm">Code Inline</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="button-preview" class="btn btn-success btn-sm">Preview</button>
+					</div>
+				</div>
+
+				<div class="row editor-inner">
+					<div class="col-md-6">
+						<fieldset>
+							<!-- Editor -->
+							<div id="fongshen-editor-markdown" class="fongshen-editor" style="height: 500px;"></div>
+							<p align="center">Pull to resize</p>
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<div class="preview-wrap">
+							<div class="preview-container"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<h2 style="text-align: center">HTML</h2>
+		<div class="row html-wrap">
+			<div class="editor-wrap col-md-12">
+				<!-- Toolbar -->
+				<div class="toolbar">
+					<div class="btn-group">
+						<button id="html-button-strong" class="btn btn-default btn-sm">B</button>
+						<button id="html-button-italic" class="btn btn-default btn-sm"><em>I</em></button>
+						<button id="html-button-stroke" class="btn btn-default btn-sm"><del>D</del></button>
+					</div>
+
+					<div class="btn-group">
+						<button id="html-button-ul" class="btn btn-default btn-sm">ul</button>
+						<button id="html-button-ol" class="btn btn-default btn-sm">ol</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="html-button-img" class="btn btn-default btn-sm">Img</button>
+						<button id="html-button-link" class="btn btn-default btn-sm">Link</button>
+					</div>
+
+					<div class="btn-group">
+						<button id="html-button-preview" class="btn btn-success btn-sm">Preview</button>
+					</div>
+				</div>
+
+				<div class="row editor-inner">
+					<div class="col-md-6">
+						<fieldset>
+							<!-- Editor -->
+							<div id="fongshen-editor-html" class="fongshen-editor" style="height: 500px;"></div>
+							<p align="center">Pull to resize</p>
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<div class="preview-wrap">
+							<div class="preview-container"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a href="https://github.com/asika32764/fongshen-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+</body>
+</html>
