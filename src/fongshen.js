@@ -167,6 +167,7 @@
 	 */
 	var registerEvents = function()
 	{
+		// Auto preview
 		if (self.options.autoPreview)
 		{
 			self.refreshBlock = self.options.autoPreviewDelay;
@@ -181,7 +182,7 @@
 				}
 			},1000);
 
-			self.element.bind('keyup.fongshen', function()
+			self.editor.bind('keyup.fongshen', function()
 			{
 				self.refreshBlock = self.options.autoPreviewDelay;
 

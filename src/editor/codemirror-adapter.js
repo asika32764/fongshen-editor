@@ -16,16 +16,16 @@
 	 *
 	 * @constructor
 	 */
-	var Class = window.AceAdapter = function(options)
+	var Class = window.CodemirrorAdapter = function(options)
 	{
 		if (options.constructor.name == "Editor")
 		{
-			this.ace = options;
+			// this.cm = options;
 		}
 
 		var defaultOptions = {
 			theme: 'monokai',
-			lang: 'markdown'
+			mode: 'markdown'
 		};
 
 		this.options = $.extend(defaultOptions, options);
@@ -40,25 +40,21 @@
 	{
 		this.element = element;
 
-		this.ace = this.ace || ace.edit(element.attr('id'));
-
-		this.ace.setTheme("ace/theme/" + this.options.theme);
-
-		this.ace.getSession().setMode("ace/mode/" + this.options.lang);
-
-		this.textarea = this.element.find('.ace_text-input');
+		this.cm = CodeMirror.fromTextArea(element.get(0), this.options);
 	};
 
 	/**
 	 * Insert text into editor.
 	 *
 	 * @param string
+	 *
+	 * @return {CodemirrorAdapter}
 	 */
 	Class.prototype.insert = function(string)
 	{
-		this.ace.insert(string);
+		this.cm.replaceSelection(string);
 
-		this.focus();
+		return this;
 	};
 
 	/**
@@ -68,7 +64,7 @@
 	 */
 	Class.prototype.getSelection = function()
 	{
-		return this.ace.getCopyText();
+		return this.cm.getSelection();
 	};
 
 	/**
@@ -78,7 +74,7 @@
 	 */
 	Class.prototype.getValue = function()
 	{
-		return this.ace.getValue();
+		return this.cm.getValue();
 	};
 
 	/**
@@ -88,7 +84,7 @@
 	 */
 	Class.prototype.getSelectionRange = function()
 	{
-		return this.ace.getSelection().getRange();
+		return this.cm.getRange();
 	};
 
 	/**
@@ -97,11 +93,16 @@
 	 * @param line
 	 * @param offset
 	 *
-	 * @returns {AceAdapter}
+	 * @returns {CodemirrorAdapter}
 	 */
 	Class.prototype.moveCursor = function(line, offset)
 	{
-		this.ace.getSelection().moveCursorBy(line, offset);
+		var pos = this.cm.getCursor();
+
+		line = pos.line + line;
+		var ch = pos.ch + offset;
+
+		this.cm.setCursor(line, ch);
 
 		return this;
 	};
@@ -111,7 +112,7 @@
 	 */
 	Class.prototype.focus = function()
 	{
-		this.textarea.focus();
+		this.cm.focus();
 	};
 
 	/**
@@ -119,7 +120,7 @@
 	 */
 	Class.prototype.resize = function()
 	{
-		this.ace.resize();
+		this.cm.refresh();
 	};
 
 	/**
@@ -130,7 +131,9 @@
 	 */
 	Class.prototype.bind = function(name, callback)
 	{
-		this.element.bind(name, callback);
+		name = name.split('.');
+
+		this.cm.on(name[0], callback);
 
 		return this;
 	};
