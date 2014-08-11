@@ -1,6 +1,6 @@
 # Fongshen Editor
 
-A highly customize code-inserting editor
+A highly customize code-inserting editor.
 
 ## About
 
@@ -8,6 +8,8 @@ Fongshen is a code inserting editor, It can integrate and wrap many other text e
 Fongshen is based on well known [MarkItUp](http://markitup.jaysalvat.com/home/) editor but almost rewrite 80% codes.
 
 The name: "Fongshen" in Chinese means the [god of wind](http://en.wikipedia.org/wiki/Fei_Lian).
+
+Fongshen's brother is [ACE X Markdown Editor](https://github.com/asikart/ace-markdown-editor) in Joomla CMS.
 
 ## Screen Shot
 
