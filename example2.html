@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="src/skins/simple/style.css" />
+	<link rel="stylesheet" href="src/type/markdown/style.css" />
+
+	<script src="vendor/jquery/jquery.js"></script>
+	<script src="vendor/ace/src/ace.js"></script>
+	<script src="src/editor/adapter.js"></script>
+	<script src="src/fongshen.js"></script>
+	<script src="src/type/markdown/buttons.js"></script>
+	<script>
+		jQuery(document).ready(function($)
+		{
+			var editor = $('#fongshen-editor');
+
+			var options = {
+				id: 'foo',
+				namespace: 'bar',
+				previewAjaxPath: 'parser/markdown.php',
+				previewContainer: '#preview-container',
+				buttons: FongshenMarkdownButtons
+			};
+
+			var aceOptions = {
+				lang: 'markdown'
+			};
+
+			var Fongshen = editor.fongshen(new AceAdapter(aceOptions), options);
+		});
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="editor-wrap col-md-12">
+
+				<div class="row editor-inner">
+					<div class="col-md-6">
+						<fieldset>
+
+							<!-- Editor -->
+							<div id="fongshen-editor" class="" style="height: 500px;"></div>
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<fieldset>
+							<legend>Preview</legend>
+							<div id="preview-container"></div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

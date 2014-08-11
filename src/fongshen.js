@@ -35,6 +35,8 @@
 			previewHandler: null,
 			previewAjaxPath: null,
 			previewAjaxVar: 'data',
+			autoPreview: true,
+			autoPreviewDelay: 2,
 			resize: true,
 			buttons: {}
 		};
@@ -165,6 +167,34 @@
 	 */
 	var registerEvents = function()
 	{
+		if (self.options.autoPreview)
+		{
+			self.refreshBlock = self.options.autoPreviewDelay;
+
+			setInterval(function()
+			{
+				self.refreshBlock--;
+
+				if (self.refreshBlock < 0)
+				{
+					self.refreshBlock = 0;
+				}
+			},1000);
+
+			self.element.bind('keyup.fongshen', function()
+			{
+				self.refreshBlock = self.options.autoPreviewDelay;
+
+				setTimeout(function()
+				{
+					if (!self.refreshBlock)
+					{
+						self.refreshPreview();
+					}
+				}, self.options.autoPreviewDelay * 1000 + 100);
+			});
+		}
+
 		// remember the last focus
 		self.element.bind('focus.fongshen', function()
 		{

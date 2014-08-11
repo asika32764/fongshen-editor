@@ -1,7 +1,10 @@
-/* -------------------------------------------------------------------
-// markItUp! Universal MarkUp Engine, JQuery plugin
-// By Jay Salvat - http://markitup.jaysalvat.com/
-// ------------------------------------------------------------------*/
+/**
+ * Part of Fongshen project.
+ *
+ * @copyright  Copyright (C) 2014 {ORGANIZATION}. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
 .fongshen * {
 	margin:0px; padding:0px;
 	outline:none;
@@ -45,6 +48,7 @@
 	cursor:n-resize;
 }
 /***************************************************************************************/
+
 /* first row of buttons */
 .fongshen-toolbar::after {
 	display: block;
@@ -57,6 +61,7 @@
 	list-style:none;
 	float:left;
 	position:relative;
+	margin: 3px;
 }
 .fongshen-toolbar ul li:hover > ul{
 	display:block;
