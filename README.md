@@ -1,4 +1,8 @@
-# Fongshen Editor - A highly customize code-inserting editor
+# Fongshen Editor
+
+A highly customize code-inserting editor
+
+## About
 
 Fongshen is a code inserting editor, It can integrate and wrap many other text editors and provides multiple buttons sets.
 Fongshen is based on well known [MarkItUp](http://markitup.jaysalvat.com/home/) editor but almost rewrite 80% codes.
