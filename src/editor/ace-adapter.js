@@ -12,12 +12,17 @@
 	/**
 	 * ACE Editor adapter.
 	 *
-	 * @param options
+	 * @param {Object|Editor} options
 	 *
 	 * @constructor
 	 */
 	var Class = window.AceAdapter = function(options)
 	{
+		if (options.constructor.name == "Editor")
+		{
+			this.ace = options;
+		}
+
 		var defaultOptions = {
 			theme: 'monokai',
 			lang: 'markdown'
@@ -35,7 +40,7 @@
 	{
 		this.element = element;
 
-		this.ace = ace.edit(element.attr('id'));
+		this.ace = this.ace || ace.edit(element.attr('id'));
 
 		this.ace.setTheme("ace/theme/" + this.options.theme);
 

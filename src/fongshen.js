@@ -21,7 +21,7 @@
 	 *
 	 * @constructor
 	 */
-	Fongshen = Class = function(element, adapter, options)
+	Class = Fongshen = function(element, adapter, options)
 	{
 		var defaultOptions = {
 			id: '',
@@ -281,8 +281,6 @@
 
 		$('li:hover > ul', ul).css('display', 'block');
 
-		console.log(buttonset);
-
 		$.each(buttonset, function(name)
 		{
 			var button = this,
@@ -305,7 +303,7 @@
 					t += levels[j]+"-";
 				}
 
-				li = $('<li class="fongshen-button fongshen-button-'+t+(i)+' '+(button.className||'')+'"><a href="" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
+				li = $('<li class="fongshen-button fongshen-button-'+t+(i)+' '+(button.className||'fs-btn-' + name)+'"><a href="" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
 					.bind('mouseenter.fongshen', function()
 					{
 						$('> ul', this).show();
