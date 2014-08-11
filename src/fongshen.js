@@ -7,14 +7,30 @@
 
 ;(function($)
 {
-	var self;
+	/**
+	 * This is Fongshen object.
+	 */
+	var self, Fongshen;
 
-	var Class = window.Fongshen = function(element, adapter, options, myOptions)
+	/**
+	 * Constructor.
+	 *
+	 * @param {Element} element   The editor container.
+	 * @param {Object}  adapter   The editor adapter, default is AceEditor.
+	 * @param {Object}  options   The option object.
+	 * @param {Object}  myOptions The custom option object.
+	 *
+	 * @constructor
+	 */
+	var Class = Fongshen = function(element, adapter, options, myOptions)
 	{
 		var defaultOptions = {
 			id: '',
 			namespace: (Math.random() + '').replace('0.', 'ns-'),
 			onShiftEnter: '',
+			beforeInsert: null,
+			afterMultiInsert: null,
+			afterInsert: null,
 			previewContainer: null,
 			previewHandler: null,
 			previewAjaxPath: null,
@@ -35,8 +51,11 @@
 		this.initialise(this.element);
 	};
 
-	
-
+	/**
+	 * Initialise.
+	 *
+	 * @param {Element} element
+	 */
 	Class.prototype.initialise = function(element)
 	{
 		var options = this.options;
@@ -48,11 +67,24 @@
 		registerEvents();
 	};
 
+	/**
+	 * Get editor adapter.
+	 *
+	 * @returns {Object}
+	 */
 	Class.prototype.getEditor = function()
 	{
 		return this.editor;
 	};
 
+	/**
+	 * Use prompter to ask user questions.
+	 *
+	 * @param {String} question
+	 * @param {String} defaultVar
+	 *
+	 * @returns {String}
+	 */
 	Class.prototype.ask = function(question, defaultVar)
 	{
 		defaultVar = defaultVar||'';
@@ -67,6 +99,12 @@
 		return value;
 	};
 
+	/**
+	 * Manually add custom button.
+	 *
+	 * @param {Element|String} ele    Button element, a selector string or an element.
+	 * @param {Object}         button The button profile options.
+	 */
 	Class.prototype.registerButton = function(ele, button)
 	{
 		if (typeof ele == 'string')
@@ -96,6 +134,9 @@
 		});
 	};
 
+	/**
+	 * Refresh preview.
+	 */
 	Class.prototype.refreshPreview = function()
 	{
 		self.element.trigger('Fongshen.BeforePreview', this.editor.getValue(), self);
@@ -105,6 +146,9 @@
 		self.element.trigger('Fongshen.AfterPreview', this.editor.getValue(), self);
 	};
 
+	/**
+	 * Create preview container if `options.previewElement` not exists.
+	 */
 	Class.prototype.createPreview = function()
 	{
 		if (!self.options.previewContainer)
@@ -117,6 +161,9 @@
 		}
 	};
 
+	/**
+	 * Register events.
+	 */
 	var registerEvents = function()
 	{
 		// remember the last focus
@@ -131,6 +178,12 @@
 		}
 	};
 
+	/**
+	 * Wrap editor.
+	 *
+	 * @param {String} id Id.
+	 * @param {String} ns Namespace.
+	 */
 	var wrap = function(id, ns)
 	{
 		var toolbar,
@@ -168,7 +221,11 @@
 					mouseUp = function(e) {
 						$("html").unbind("mousemove.fongshen", mouseMove).unbind("mouseup.fongshen", mouseUp);
 
+						self.element.on('Fongshen.BeforeResize');
+
 						self.editor.resize();
+
+						self.element.on('Fongshen.AfterResize');
 
 						return false;
 					};
@@ -179,6 +236,14 @@
 		}
 	};
 
+	/**
+	 * Create menus.
+	 *
+	 * @param {Array}       buttonset
+	 * @param {HTMLElement} toolbar
+	 *
+	 * @returns {HTMLElement}
+	 */
 	var createMenus = function(buttonset, toolbar)
 	{
 		var ul = $('<ul></ul>'),
@@ -192,6 +257,7 @@
 			var button = this,
 				t = '',
 				title,
+				key,
 				li,
 				j;
 
@@ -240,6 +306,11 @@
 		return ul;
 	};
 
+	/**
+	 * Insert button value.
+	 *
+	 * @param {Object} button Button profile.
+	 */
 	var insert = function(button)
 	{
 		var selection = self.editor.getCopyText(),
@@ -279,6 +350,11 @@
 		}
 	};
 
+	/**
+	 * Insert action.
+	 *
+	 * @param string
+	 */
 	var doInsert = function(string)
 	{
 		var selection = self.editor.getSelection();
@@ -297,6 +373,14 @@
 		}
 	};
 
+	/**
+	 * Build button insertion.
+	 *
+	 * @param string
+	 * @param button
+	 * @param selection
+	 * @returns {{block: *, openBlockWith: , openWith: , replaceWith: , placeHolder: , closeWith: , closeBlockWith: }}
+	 */
 	var buildBlock = function(string, button, selection)
 	{
 		var openWith = trigger(button.openWith, button);
@@ -329,12 +413,14 @@
 
 			for (var l = 0; l < lines.length; l++)
 			{
-				line = lines[l];
+				var line = lines[l];
 				var trailingSpaces;
+
 				if (trailingSpaces = line.match(/ *$/))
 				{
 					blocks.push(openWith + line.replace(/ *$/g, '') + closeWith + trailingSpaces);
-				} else
+				}
+				else
 				{
 					blocks.push(openWith + line + closeWith);
 				}
@@ -356,6 +442,14 @@
 		};
 	};
 
+	/**
+	 * Trigger button hooks.
+	 *
+	 * @param action
+	 * @param button
+	 *
+	 * @returns {*}
+	 */
 	var trigger = function(action, button)
 	{
 		if ($.isFunction(action))
@@ -371,6 +465,9 @@
 		return action;
 	};
 
+	/**
+	 * Render preview.
+	 */
 	var renderPreview = function()
 	{
 		if (!self.options.previewContainer)
@@ -403,6 +500,15 @@
 		}
 	};
 
+	/**
+	 * Plugin of Fongshen.
+	 *
+	 * @param {Object} adapter
+	 * @param {Object} options
+	 * @param {Object} myOptions
+	 *
+	 * @returns {*|$.fn}
+	 */
 	$.fn.fongshen = function(adapter, options, myOptions)
 	{
 		var ele = [];
@@ -410,18 +516,25 @@
 		this.each(function()
 		{
 			var $this = $(this),
-				editor = new window.Fongshen(this, adapter, options, myOptions);
+				editor = new Class(this, adapter, options, myOptions);
 
 			ele.push(editor);
 
 			$this.data('Fongshen', editor);
 		});
 
-		return ele[0] || $this;
+		return ele[0] || this;
 	};
 
+	/**
+	 * Plugin to get Fongshen object.
+	 *
+	 * @returns {Fongshen}
+	 */
 	$.fn.getFongshen = function()
 	{
 		return $(this).data('Fongshen');
 	};
+
+	window.Fongshen = Class;
 })(jQuery);
