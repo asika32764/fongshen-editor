@@ -107,3 +107,17 @@ var Fongshen = editor.fongshen(new AceAdapter(ace), options);
 ```
 
 Other tutorial please see [Examples](examples).
+
+## TODO
+
+### Add more button set
+
+- Wiki
+- BBCode
+- reStructuredText
+
+Please comment me if you need other languages.
+
+### Add more themes
+
+
