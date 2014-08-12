@@ -1,6 +1,6 @@
 # Fongshen Editor
 
-A highly customize code-inserting editor.
+A highly customizable code-inserting editor.
 
 ## About
 
